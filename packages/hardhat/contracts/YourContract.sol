@@ -7,19 +7,28 @@ import "hardhat/console.sol";
 
 contract YourContract {
 
-  event SetPurpose(address sender, string purpose);
-
-  string public purpose = "Building Unstoppable Apps!!!";
 
   constructor() payable {
     // what should we do on deploy?
   }
 
-  function setPurpose(string memory newPurpose) public payable {
-      purpose = newPurpose;
-      console.log(msg.sender,"set purpose to",purpose);
-      emit SetPurpose(msg.sender, purpose);
+
+
+  function split(uint n, address[] calldata friends) public payable {
+    console.log(msg.sender, friends.length);
+    uint l = friends.length;
+    uint amount = n/l;
+    console.log(amount);
+    for (uint i = 0; i < l; i++) {
+      address recepient = friends[i];
+      (bool sent, bytes memory data) = recepient.call{value: amount}("");
+      require(sent, "Failed to send Ether");
+      console.log("transferred ", amount, " to " , recepient);         
+    }
   }
+
+
+
 
   // to support receiving ETH by default
   receive() external payable {}
